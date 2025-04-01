@@ -1,11 +1,3 @@
-/**********************************
- * @Author: Ronnie Zhang
- * @LastEditor: Ronnie Zhang
- * @LastEditTime: 2023/12/05 21:31:02
- * @Email: zclzone@outlook.com
- * Copyright © 2023 Ronnie Zhang(大脸怪) | https://isme.top
- **********************************/
-
 import path from 'node:path'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
@@ -23,6 +15,12 @@ export default defineConfig(({ mode }) => {
   const { VITE_PUBLIC_PATH, VITE_PROXY_TARGET } = viteEnv
 
   return {
+    ssr: {
+      noExternal: ['@vue/repl']
+    },
+    optimizeDeps: {
+      exclude: ['@vue/repl']
+    },
     base: VITE_PUBLIC_PATH || '/',
     plugins: [
       Vue(),
@@ -71,6 +69,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       chunkSizeWarningLimit: 1024, // chunk 大小警告的限制（单位kb）
+      assetsInlineLimit: 0,
     },
   }
 })
