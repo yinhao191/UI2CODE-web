@@ -1,7 +1,5 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
-import {injectVant} from './vantInject.js'
-injectVant()
 const msg = ref('Hello Vant!')
 </script>
 
