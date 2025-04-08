@@ -1,6 +1,6 @@
-import { getCurrentInstance } from 'vue'
-
 import Vant from 'vant'
+
+import { getCurrentInstance } from 'vue'
 
 export function injectVant() {
   const instance = getCurrentInstance()
@@ -17,5 +17,5 @@ export function appendStyle() {
     document.body.appendChild(link)
   })
 }
-
+// eslint-disable-next-line antfu/no-top-level-await
 await appendStyle()

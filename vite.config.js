@@ -1,5 +1,6 @@
+import fs from 'node:fs'
 import path from 'node:path'
-import Vue from '@vitejs/plugin-vue'
+import vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -11,19 +12,28 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import { pluginIcons, pluginPagePathes } from './build/plugin-isme'
 
 export default defineConfig(({ mode }) => {
+  console.log(mode)
   const viteEnv = loadEnv(mode, process.cwd())
   const { VITE_PUBLIC_PATH, VITE_PROXY_TARGET } = viteEnv
+  console.log('public target: %s, proxy taget: %s', VITE_PUBLIC_PATH, VITE_PROXY_TARGET)
 
   return {
-    ssr: {
-      noExternal: ['@vue/repl']
-    },
     optimizeDeps: {
-      exclude: ['@vue/repl']
+      exclude: ['@vue/repl'],
     },
     base: VITE_PUBLIC_PATH || '/',
     plugins: [
-      Vue(),
+      vue({
+        script: {
+          defineModel: true,
+          propsDestructure: true,
+          fs: {
+            fileExists: fs.existsSync,
+            readFile: file => fs.readFileSync(file, 'utf-8'),
+          },
+        },
+      }),
+      // Vue(),
       VueJsx(),
       VueDevTools(),
       Unocss(),
@@ -54,7 +64,7 @@ export default defineConfig(({ mode }) => {
       open: false,
       proxy: {
         '/api': {
-          target: VITE_PROXY_TARGET,
+          target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default',
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, ''),
           secure: false,
@@ -68,8 +78,13 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 1024, // chunk 大小警告的限制（单位kb）
-      assetsInlineLimit: 0,
+      rollupOptions: {
+
+      },
     },
+    preview: {
+
+    },
+
   }
 })
