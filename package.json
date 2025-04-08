@@ -28,6 +28,9 @@
     "vue-router": "^4.5.0",
     "xlsx": "^0.18.5"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
     "@iconify/json": "^2.2.311",
