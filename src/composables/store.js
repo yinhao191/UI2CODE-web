@@ -13,8 +13,8 @@ export function useStore() {
   const {
     importMap,
   } = useVueImportMap({
-    runtimeDev: 'https://cdn.jsdelivr.net/npm/vue@3.5.13/+esm',
-    runtimeProd: 'https://cdn.jsdelivr.net/npm/vue@3.5.13/+esm',
+    runtimeDev: 'https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.prod.js',
+    runtimeProd: 'https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.prod.js',
   })
   const finalImportMap = computed(() => ({
     ...importMap.value,

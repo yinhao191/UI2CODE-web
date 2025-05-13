@@ -1,11 +1,13 @@
 <template>
-  <Repl
-    :store="store"
-    :editor="Monaco"
-    :theme="theme"
-    :show-compile-output="true"
-    @keydown.ctrl.s.prevent
-  />
+  <CommonPage>
+    <Repl
+      :store="store"
+      :editor="Monaco"
+      :theme="theme"
+      :show-compile-output="true"
+      @keydown.ctrl.s.prevent
+    />
+  </CommonPage>
 </template>
 
 <script setup lang="ts">

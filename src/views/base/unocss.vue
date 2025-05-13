@@ -1,70 +1,47 @@
-
-
 <template>
-  <CommonPage show-footer>
-    <p>
-      文档：
-      <a c-blue hover-decoration-underline href="https://uno.antfu.me/" target="_blank">
-        https://uno.antfu.me/
-      </a>
-    </p>
-    <p>
-      playground：
-      <a c-blue hover-decoration-underline href="https://unocss.antfu.me/play/" target="_blank">
-        https://unocss.antfu.me/play/
-      </a>
-    </p>
+  <div class="personal-rag">
+    <n-grid cols="2 s:3 m:4 l:5 xl:6 2xl:7" responsive="screen" x-gap="10" y-gap="10">
+      <n-grid-item>
+        <ragCard />
+      </n-grid-item>
+      <n-grid-item>
+        <ragCard />
+      </n-grid-item>
+      <n-grid-item>
+        <ragCard />
+      </n-grid-item>
+    </n-grid>
 
-    <div mt-20 w-350 f-c-c flex-col>
-      <div flex flex-wrap justify-around rounded-10 p-10 card-border>
-        <div m-20 h-50 w-50 f-c-c rounded-5 p-10 border="1 solid">
-          <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-        </div>
-        <div m-20 h-50 w-50 flex justify-between rounded-5 p-10 border="1 solid">
-          <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          <span h-6 w-6 self-end rounded-3 bg-black dark:bg-white />
-        </div>
-        <div m-20 h-50 w-50 flex justify-between rounded-5 p-10 border="1 solid">
-          <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          <span h-6 w-6 self-center rounded-3 bg-black dark:bg-white />
-          <span h-6 w-6 self-end rounded-3 bg-black dark:bg-white />
-        </div>
-        <div m-20 h-50 w-50 flex justify-between rounded-5 p-10 border="1 solid">
-          <div flex-col justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
+    <n-modal v-show="showModal">
+      <n-upload directory-dnd multiple action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :max="5">
+        <n-upload-dragger>
+          <div style="margin-bottom: 12px">
+            <n-icon size="48" :depth="3">
+              <ArchiveIcon />
+            </n-icon>
           </div>
-          <div flex-col justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          </div>
-        </div>
-        <div m-20 h-50 w-50 flex-col items-center justify-between rounded-5 p-10 border="1 solid">
-          <div w-full flex justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          </div>
-          <div h-6 w-6 rounded-3 bg-black dark:bg-white />
-          <div w-full flex justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          </div>
-        </div>
-        <div m-20 h-50 w-50 flex-col justify-between rounded-5 p-10 border="1 solid">
-          <div w-full flex justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          </div>
-          <div w-full flex justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          </div>
-          <div w-full flex justify-between>
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-            <span h-6 w-6 rounded-3 bg-black dark:bg-white />
-          </div>
-        </div>
-      </div>
-    </div>
-  </CommonPage>
+          <n-text style="font-size: 16px">
+            点击或者拖动文件到该区域来上传
+          </n-text>
+          <n-p depth="3" style="margin: 8px 0 0 0">
+            请不要上传敏感数据，比如你的银行卡号和密码，信用卡号有效期和安全码
+          </n-p>
+        </n-upload-dragger>
+      </n-upload>
+    </n-modal>
+  </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import ragCard from '../../components/rag/rag-card.vue'
+
+const showModal = ref(true)
+</script>
+
+<style scoped>
+.personal-rag {
+  margin: 20px;
+  overflow-y: scroll;
+}
+</style>
