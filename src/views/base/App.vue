@@ -3,21 +3,24 @@
     <Repl
       :store="store"
       :editor="Monaco"
-      :theme="theme"
+      theme="dark"
       :show-compile-output="true"
       @keydown.ctrl.s.prevent
     />
   </CommonPage>
 </template>
 
-<script setup lang="ts">
-import { useStore } from '@/composables/store'
-import { Repl } from '@vue/repl'
-import Monaco from '@vue/repl/monaco-editor'
+<script setup>
+import { Repl, useStore } from 'vant-repl'
+import Monaco from 'vant-repl/monaco-editor'
 import { ref } from 'vue'
 
-const theme = ref('dark') // 或 'light'
-const store = useStore()
+const store = useStore(
+  {
+    vueVersion: ref('2.6.14'),
+    vantVersion: ref('2.10.1'),
+  },
+)
 </script>
 
   <style>
