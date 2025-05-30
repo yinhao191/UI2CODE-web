@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     optimizeDeps: {
-      exclude: ['@vue/repl'],
+      exclude: ['vant-repl'],
     },
     base: VITE_PUBLIC_PATH || '/',
     plugins: [
