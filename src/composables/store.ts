@@ -1,15 +1,26 @@
 import { compileFile, File, useStore as useReplStore, useVueImportMap } from '@vue/repl'
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import mainCode from '../template/main.vue?raw'
 import vantInjectCode from '../template/vant4.js?raw'
 import welcomeSFCCode from '../template/welcomeSFCCode.vue?raw'
+
+const MAIN_FILE = 'src/PlaygroundMain.vue'
+
+// export interface Initial {
+//   serializedState?: string
+//   versions?: Versions
+// }
+// export type VersionKey = 'vue' | 'openTiny' | 'typescript'
+// export type Versions = Record<VersionKey, string>
 
 const template = ref({
   welcomeSFC: mainCode,
 })
 
 export function useStore() {
-  const MAIN_FILE = 'src/PlaygroundMain.vue'
+  // const versions = reactive(initial.versions)
+  // const compiler = shallowRef<typeof import('vue/compiler-sfc')>()
+
   const {
     importMap,
   } = useVueImportMap({
