@@ -1,5 +1,3 @@
-
-
 import axios from 'axios'
 import { setupInterceptors } from './interceptors'
 
@@ -16,8 +14,11 @@ export function createAxios(options = {}) {
   return service
 }
 
-export const request = createAxios()
+export const request = createAxios({
+  baseURL: '/mock-api', // mock配置
+})
 
-export const mockRequest = createAxios({
-  baseURL: '/mock-api',
+// 调用实际后端服务器地址，用这个方法
+export const RealRequest = createAxios({
+  baseURL: '/api',
 })

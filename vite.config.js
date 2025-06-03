@@ -63,8 +63,20 @@ export default defineConfig(({ mode }) => {
       port: 3200,
       open: false,
       proxy: {
-        '/api': {
+        '/mock-api': {
           target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/mock-api/, ''),
+          secure: false,
+          configure: (proxy, options) => {
+            // 配置此项可在响应头中看到请求的真实地址
+            proxy.on('proxyRes', (proxyRes, req) => {
+              proxyRes.headers['x-real-url'] = new URL(req.url || '', options.target)?.href || ''
+            })
+          },
+        },
+        '/api': {
+          target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default', // 后端服务部署后替换为服务器地址
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, ''),
           secure: false,
