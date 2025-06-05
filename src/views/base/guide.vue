@@ -13,8 +13,6 @@
           placeholder="Paste links for pictures or design file, upload images"
           class="mt-30 h-120 w-full rounded-3xl bg-[rgb(51,54,52)] text-white"
         >
-
-        />
         <n-button round color="#222625" class="absolute bottom-4 right-4 px-10 py-2 text-gray" @click="generateCode">
           <template #icon>
             <i class="i-me:awesome?mask text-28" />
@@ -30,7 +28,7 @@
     <div class="mx-auto f-c-c flex-col container">
       <n-tabs type="bar" animated class="custom-tabs self-start">
         <n-tab-pane name="Image to code recently" tab="Image to code recently" class="f-c-c flex-wrap justify-between">
-          <recentImage :src="imageURL" />
+          <recentImage :src="imageURL" @click="goToPlayground" />
           <recentImage :src="imageURL" />
           <recentImage :src="imageURL" />
           <recentImage :src="imageURL" />
@@ -44,10 +42,22 @@
   </div>
 </template>
 
-<script lang="js" setup>
+<script lang="ts" setup>
+import api from '@/api'
+import { onMounted } from 'vue'
 import recentImage from './components/recent-image.vue'
 
-const imageURL = 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
+const imageURL = 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg'
+
+// const recentBuildData = reactive({
+//     createTime: String,
+//     imagePath: String,
+//     code: String
+// })
+
+onMounted(() => {
+  api.getRecentBuild(1234)
+})
 
 function generateCode() {
   // 假装调接口生成代码

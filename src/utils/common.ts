@@ -1,5 +1,3 @@
-
-
 import dayjs from 'dayjs'
 
 /**
@@ -8,7 +6,7 @@ import dayjs from 'dayjs'
  * @returns {string | null} 格式化后的时间字符串
  *
  */
-export function formatDateTime(time = undefined, format = 'YYYY-MM-DD HH:mm:ss') {
+export function formatDateTime(time: (any) = undefined, format: string = 'YYYY-MM-DD HH:mm:ss'): string | null {
   return dayjs(time).format(format)
 }
 
@@ -16,17 +14,11 @@ export function formatDate(date = undefined, format = 'YYYY-MM-DD') {
   return formatDateTime(date, format)
 }
 
-/**
- * @param {Function} fn
- * @param {number} wait
- * @returns {Function}  节流函数
- *
- */
-export function throttle(fn, wait) {
+export function throttle(fn: (...args: any) => void, wait: number) {
   let context, args
   let previous = 0
 
-  return function (...argArr) {
+  return function (this: any, ...argArr: any) {
     const now = +new Date()
     context = this
     args = argArr
@@ -37,15 +29,9 @@ export function throttle(fn, wait) {
   }
 }
 
-/**
- * @param {Function} method
- * @param {number} wait
- * @param {boolean} immediate
- * @return {*} 防抖函数
- */
-export function debounce(method, wait, immediate) {
-  let timeout
-  return function (...args) {
+export function debounce(method: (...args: any) => void, wait: number, immediate: boolean): any {
+  let timeout: any
+  return function (this: any, ...args: any) {
     const context = this
     if (timeout) {
       clearTimeout(timeout)
@@ -81,7 +67,7 @@ export function debounce(method, wait, immediate) {
  * @param {number} time 毫秒数
  * @returns 睡一会儿，让子弹暂停一下
  */
-export function sleep(time) {
+export function sleep(time: number) {
   return new Promise(resolve => setTimeout(resolve, time))
 }
 
@@ -90,7 +76,7 @@ export function sleep(time) {
  * @param {Function} cb
  * @return {ResizeObserver}
  */
-export function useResize(el, cb) {
+export function useResize(el: HTMLElement, cb: (...args: any) => void): ResizeObserver {
   const observer = new ResizeObserver((entries) => {
     cb(entries[0].contentRect)
   })

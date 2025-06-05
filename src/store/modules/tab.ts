@@ -1,38 +1,54 @@
-
-
 import { defineStore } from 'pinia'
+import { nextTick } from 'vue'
 import { useRouterStore } from './router'
 
+export interface Tab {
+  path: string
+  title: string
+  keepAlive?: boolean
+}
+
+interface TabState {
+  tabs: Tab[]
+  activeTab: string
+  reloading: boolean
+}
+
 export const useTabStore = defineStore('tab', {
-  state: () => ({
+  state: (): TabState => ({
     tabs: [],
     activeTab: '',
     reloading: false,
   }),
   getters: {
-    activeIndex() {
+    activeIndex(): number {
       return this.tabs.findIndex(item => item.path === this.activeTab)
     },
   },
   actions: {
-    async setActiveTab(path) {
+    async setActiveTab(path: string) {
       await nextTick() // tab栏dom更新完再设置激活，让tab栏定位到新增的tab上生效
       this.activeTab = path
     },
-    setTabs(tabs) {
+    setTabs(tabs: Tab[]) {
       this.tabs = tabs
     },
-    addTab(tab = {}) {
-      const findIndex = this.tabs.findIndex(item => item.path === tab.path)
+    addTab(tab: Partial<Tab> = {}) {
+      const normalizedTab: Tab = {
+        path: tab.path || '',
+        title: tab.title || 'Unknown',
+        keepAlive: tab.keepAlive ?? true,
+      }
+      const findIndex = this.tabs.findIndex(item => item.path === normalizedTab.path)
       if (findIndex !== -1) {
-        this.tabs.splice(findIndex, 1, tab)
+        this.tabs.splice(findIndex, 1, normalizedTab)
       }
       else {
-        this.setTabs([...this.tabs, tab])
+        this.setTabs([...this.tabs, normalizedTab])
       }
-      this.setActiveTab(tab.path)
+      this.setActiveTab(normalizedTab.path)
     },
-    async reloadTab(path, keepAlive) {
+    async reloadTab(path: string, keepAlive: boolean) {
       const findItem = this.tabs.find(item => item.path === path)
       if (!findItem)
         return

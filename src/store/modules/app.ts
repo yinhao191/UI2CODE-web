@@ -1,5 +1,3 @@
-
-
 import { defaultLayout, defaultPrimaryColor, naiveThemeOverrides } from '@/settings'
 import { generate, getRgbStr } from '@arco-design/color'
 import { useDark } from '@vueuse/core'
@@ -17,19 +15,21 @@ export const useAppStore = defineStore('app', {
     switchCollapsed() {
       this.collapsed = !this.collapsed
     },
-    setCollapsed(b) {
+    setCollapsed(b: any) {
       this.collapsed = b
     },
     toggleDark() {
       this.isDark = !this.isDark
     },
-    setLayout(v) {
+    setLayout(v: any) {
       this.layout = v
     },
-    setPrimaryColor(color) {
+    setPrimaryColor(color: any) {
       this.primaryColor = color
     },
-    setThemeColor(color = this.primaryColor, isDark = this.isDark) {
+    setThemeColor(color: any, isDark: any) {
+      color = color ?? this.primaryColor
+      isDark = isDark ?? this.isDark
       const colors = generate(color, {
         list: true,
         dark: isDark,

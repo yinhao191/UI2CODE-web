@@ -4,10 +4,11 @@
       <n-image
         object-fit="contain"
         :src="src"
+        preview-disabled
       />
     </div>
     <div class="mt-5">
-      <i class="i-fe:user" />
+      <i class="i-fe:user text-gray-500" />
       <span class="ml-5 text-gray-500">fxxxx-Mnse2025 | Today 10:25</span>
     </div>
   </div>

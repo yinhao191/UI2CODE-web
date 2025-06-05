@@ -1,11 +1,9 @@
-
-
 import { useAuthStore } from '@/store'
 import { resolveResError } from './helpers'
 
-export function setupInterceptors(axiosInstance) {
-  const SUCCESS_CODES = [0, 200]
-  function resResolve(response) {
+export function setupInterceptors(axiosInstance: any) {
+  const SUCCESS_CODES = [0, 200, '200']
+  function resResolve(response: any) {
     const { data, status, config, statusText, headers } = response
     if (headers['content-type']?.includes('json')) {
       if (SUCCESS_CODES.includes(data?.code)) {
@@ -27,7 +25,7 @@ export function setupInterceptors(axiosInstance) {
   axiosInstance.interceptors.response.use(resResolve, resReject)
 }
 
-function reqResolve(config) {
+function reqResolve(config: any) {
   // 处理不需要token的请求
   if (config.needToken === false) {
     return config
@@ -42,11 +40,11 @@ function reqResolve(config) {
   return config
 }
 
-function reqReject(error) {
+function reqReject(error: any) {
   return Promise.reject(error)
 }
 
-async function resReject(error) {
+async function resReject(error: any) {
   if (!error || !error.response) {
     const code = error?.code
     /** 根据code处理对应的操作，并返回处理后的message */
