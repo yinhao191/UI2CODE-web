@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export interface BuildData {
   createTime: string
   imagePath: string
-  code: string
+  lastCode: string
 }
 
 interface ComponentState {

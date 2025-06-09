@@ -28,14 +28,7 @@
     <div class="mx-auto f-c-c flex-col container">
       <n-tabs type="bar" animated class="custom-tabs self-start">
         <n-tab-pane name="Image to code recently" tab="Image to code recently" class="f-c-c flex-wrap justify-between">
-          <recentImage :src="imageURL" @click="goToPlayground(testBuildData)" />
-          <recentImage :src="imageURL" />
-          <recentImage :src="imageURL" />
-          <recentImage :src="imageURL" />
-          <recentImage :src="imageURL" />
-          <recentImage :src="imageURL" />
-          <recentImage :src="imageURL" />
-          <recentImage :src="imageURL" />
+          <recentImage v-for="item in recentData" :key="item" :src="item.imagePath" :time="item.createTime" @click="goToPlayground(item)" />
         </n-tab-pane>
       </n-tabs>
     </div>
@@ -49,17 +42,17 @@ import { usePlaygroundStore } from '@/store'
 import { onMounted, reactive } from 'vue'
 import recentImage from './components/recent-image.vue'
 
-const imageURL = 'https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561749199281-c29ddfaa62f34be9abd4d5cba3909262.png?x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-date=20250606T084121Z&x-oss-expires=604799&x-oss-credential=LTAI5tFmAbWeBLgwsGRa9S64%2F20250606%2Fcn-chengdu%2Foss%2Faliyun_v4_request&x-oss-signature=3f2f7ddcf7eb935537885820532a3d31b49a57b7432c675128c8b879504f6722 '
+// const imageURL = 'https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561749199281-c29ddfaa62f34be9abd4d5cba3909262.png?x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-date=20250606T084121Z&x-oss-expires=604799&x-oss-credential=LTAI5tFmAbWeBLgwsGRa9S64%2F20250606%2Fcn-chengdu%2Foss%2Faliyun_v4_request&x-oss-signature=3f2f7ddcf7eb935537885820532a3d31b49a57b7432c675128c8b879504f6722 '
 const store = usePlaygroundStore()
 
-onMounted(() => {
-  api.getRecentBuild(1234)
-})
+const recentData = reactive<BuildData[]>([])
 
-const testBuildData: BuildData = reactive({
-  createTime: '2025-3-3',
-  code: '<1234>',
-  imagePath: imageURL,
+onMounted(async () => {
+  const userRecentData = await api.getRecentBuild(1234)
+  let data = userRecentData.data
+  // 取前8个
+  data = data.slice(0, 8)
+  recentData.push(...data)
 })
 
 function goToPlayground(data: BuildData) {
