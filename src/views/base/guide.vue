@@ -28,7 +28,7 @@
     <div class="mx-auto f-c-c flex-col container">
       <n-tabs type="bar" animated class="custom-tabs self-start">
         <n-tab-pane name="Image to code recently" tab="Image to code recently" class="f-c-c flex-wrap justify-between">
-          <recentImage :src="imageURL" @click="goToPlayground" />
+          <recentImage :src="imageURL" @click="goToPlayground(testBuildData)" />
           <recentImage :src="imageURL" />
           <recentImage :src="imageURL" />
           <recentImage :src="imageURL" />
@@ -43,21 +43,29 @@
 </template>
 
 <script lang="ts" setup>
+import type { BuildData } from '@/store'
 import api from '@/api'
-import { onMounted } from 'vue'
+import { usePlaygroundStore } from '@/store'
+import { onMounted, reactive } from 'vue'
 import recentImage from './components/recent-image.vue'
 
-const imageURL = 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg'
-
-// const recentBuildData = reactive({
-//     createTime: String,
-//     imagePath: String,
-//     code: String
-// })
+const imageURL = 'https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561749199281-c29ddfaa62f34be9abd4d5cba3909262.png?x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-date=20250606T084121Z&x-oss-expires=604799&x-oss-credential=LTAI5tFmAbWeBLgwsGRa9S64%2F20250606%2Fcn-chengdu%2Foss%2Faliyun_v4_request&x-oss-signature=3f2f7ddcf7eb935537885820532a3d31b49a57b7432c675128c8b879504f6722 '
+const store = usePlaygroundStore()
 
 onMounted(() => {
   api.getRecentBuild(1234)
 })
+
+const testBuildData: BuildData = reactive({
+  createTime: '2025-3-3',
+  code: '<1234>',
+  imagePath: imageURL,
+})
+
+function goToPlayground(data: BuildData) {
+  // 与父附件通信，展示vant-playground
+  store.setPlaygroundData(data)
+}
 
 function generateCode() {
   // 假装调接口生成代码

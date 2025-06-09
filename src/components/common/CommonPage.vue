@@ -1,5 +1,3 @@
-
-
 <template>
   <main class="h-full flex-col flex-1 overflow-hidden bg-#f5f6fb dark:bg-#121212">
     <AppCard
