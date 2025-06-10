@@ -20,11 +20,11 @@
   </CommonPage>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { usePlaygroundStore } from '@/store'
 import { Repl, useStore } from 'vant-repl'
 import Monaco from 'vant-repl/monaco-editor'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const store = useStore(
   {
@@ -34,6 +34,12 @@ const store = useStore(
 )
 
 const playgroundStore = usePlaygroundStore()
+
+onMounted(() => {
+  // 激活时加载数据
+  const newData = playgroundStore.buildData
+  store.activeFile.code = newData!.lastCode
+})
 
 function gotoGuidePage() {
   // 跳转到指南页面

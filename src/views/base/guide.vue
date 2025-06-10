@@ -27,8 +27,8 @@
 
     <div class="mx-auto f-c-c flex-col container">
       <n-tabs type="bar" animated class="custom-tabs self-start">
-        <n-tab-pane name="Image to code recently" tab="Image to code recently" class="f-c-c flex-wrap justify-between">
-          <recentImage v-for="item in recentData" :key="item" :src="item.imagePath" :time="item.createTime" @click="goToPlayground(item)" />
+        <n-tab-pane name="Image to code recently" tab="Image to code recently" class="grid-container">
+          <recentImage v-for="item in recentData" :key="item.createTime" :src="item.imagePath" :time="item.createTime" @click="goToPlayground(item)" />
         </n-tab-pane>
       </n-tabs>
     </div>
@@ -48,7 +48,7 @@ const store = usePlaygroundStore()
 const recentData = reactive<BuildData[]>([])
 
 onMounted(async () => {
-  const userRecentData = await api.getRecentBuild(1234)
+  const userRecentData = await api.getRecentBuild(123456)
   let data = userRecentData.data
   // 取前8个
   data = data.slice(0, 8)
@@ -79,5 +79,12 @@ input::placeholder {
 
 :deep() .n-tabs-bar {
   background-color: white;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
 }
 </style>
