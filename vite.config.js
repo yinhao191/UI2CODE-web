@@ -64,7 +64,8 @@ export default defineConfig(({ mode }) => {
       open: false,
       proxy: {
         '/mock-api': {
-          target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default',
+          // target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default',
+          target: 'http://127.0.0.1:4523/m1/6094781-5785319-default', // 后端服务部署后替换为服务器地址
           changeOrigin: true,
           rewrite: path => path.replace(/^\/mock-api/, ''),
           secure: false,
@@ -76,7 +77,8 @@ export default defineConfig(({ mode }) => {
           },
         },
         '/api': {
-          target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default', // 后端服务部署后替换为服务器地址
+          // target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default', // 后端服务部署后替换为服务器地址
+          target: 'http://8.137.36.56:8000', // 后端服务部署后替换为服务器地址
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, ''),
           secure: false,

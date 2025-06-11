@@ -27,6 +27,7 @@ export default defineConfig({
   shortcuts: [
     ['wh-full', 'w-full h-full'],
     ['f-c-c', 'flex justify-center items-center'],
+    ['f-c-s', 'flex justify-center items-start'],
     ['flex-col', 'flex flex-col'],
     ['card-border', 'border border-solid border-light_border dark:border-dark_border'],
     ['auto-bg', 'bg-white dark:bg-dark'],

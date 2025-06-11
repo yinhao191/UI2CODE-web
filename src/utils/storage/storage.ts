@@ -1,32 +1,34 @@
-
-
+import type { StorageOptions } from './type'
 import { isNullOrUndef } from '@/utils'
 
-class Storage {
-  constructor(option) {
-    this.storage = option.storage
-    this.prefixKey = option.prefixKey
+class Storage<T = any> {
+  private storage: globalThis.Storage
+  private prefixKey: string
+
+  constructor(option: StorageOptions) {
+    this.storage = option.storage || sessionStorage
+    this.prefixKey = option.prefixKey || ''
   }
 
-  getKey(key) {
+  getKey(key: string): string {
     return `${this.prefixKey}${key}`.toLowerCase()
   }
 
-  set(key, value, expire) {
+  set(key: string, value: T, expire?: number): void {
     const stringData = JSON.stringify({
       value,
       time: Date.now(),
-      expire: !isNullOrUndef(expire) ? new Date().getTime() + expire * 1000 : null,
+      expire: !isNullOrUndef(expire) ? new Date().getTime() + expire! * 1000 : null,
     })
     this.storage.setItem(this.getKey(key), stringData)
   }
 
-  get(key) {
+  get(key: string): T | null {
     const { value } = this.getItem(key, {})
     return value
   }
 
-  getItem(key, def = null) {
+  getItem(key: string, def: any = null) {
     const val = this.storage.getItem(this.getKey(key))
     if (!val)
       return def
@@ -46,7 +48,7 @@ class Storage {
     }
   }
 
-  remove(key) {
+  remove(key: any) {
     this.storage.removeItem(this.getKey(key))
   }
 

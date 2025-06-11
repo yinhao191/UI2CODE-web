@@ -1,5 +1,15 @@
 <template>
   <CommonPage>
+    <template #header>
+      <n-breadcrumb>
+        <n-breadcrumb-item @click="gotoGuidePage">
+          首页
+        </n-breadcrumb-item>
+        <n-breadcrumb-item>
+          工作台
+        </n-breadcrumb-item>
+      </n-breadcrumb>
+    </template>
     <Repl
       :store="store"
       :editor="Monaco"
@@ -10,10 +20,11 @@
   </CommonPage>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { usePlaygroundStore } from '@/store'
 import { Repl, useStore } from 'vant-repl'
 import Monaco from 'vant-repl/monaco-editor'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const store = useStore(
   {
@@ -21,6 +32,18 @@ const store = useStore(
     vantVersion: ref('2.10.1'),
   },
 )
+const playgroundStore = usePlaygroundStore()
+
+onMounted(() => {
+  // 激活时加载数据
+  const newData = playgroundStore.buildData
+  store.activeFile.code = newData!.lastCode
+})
+
+function gotoGuidePage() {
+  // 跳转到指南页面
+  playgroundStore.reset()
+}
 </script>
 
   <style>

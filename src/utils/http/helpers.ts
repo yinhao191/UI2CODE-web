@@ -1,9 +1,7 @@
-
-
 import { useAuthStore } from '@/store'
 
 let isConfirming = false
-export function resolveResError(code, message, needTip = true) {
+export function resolveResError(code: number, message: string, needTip = true) {
   switch (code) {
     case 401:
       if (isConfirming || !needTip)

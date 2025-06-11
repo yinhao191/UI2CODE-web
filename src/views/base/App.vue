@@ -1,13 +1,13 @@
 <template>
-  <component :is="generated ? vantPlayground : guide" />
+  <component :is="store.generated ? vantPlayground : guide" />
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { usePlaygroundStore } from '@/store'
 import guide from './guide.vue'
 import vantPlayground from './vant-playground.vue'
 
-const generated = ref(false)
+const store = usePlaygroundStore()
 </script>
 
   <style>

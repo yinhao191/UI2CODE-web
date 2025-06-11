@@ -19055,7 +19055,10 @@ function useStore(
   applyBuiltinImportMap();
   const injectFile = new File("src/vantInject.js", injectVantCode);
   addFile(injectFile);
-  const appFile = new File("src/App.vue", welcomeSFCCode);
+  const appFile = new File(
+    "src/App.vue",
+    template.value.welcomeSFC || welcomeSFCCode,
+  );
   addFile(appFile);
   const store = reactive({
     files,
@@ -19071,6 +19074,7 @@ function useStore(
     compiler,
     loading,
     vueVersion,
+    vantVersion,
     locale,
     typescriptVersion,
     dependencyVersion,
