@@ -21,6 +21,6 @@ export const request = createAxios({
 
 // 调用实际后端服务器地址，用这个方法
 export const RealRequest = createAxios({
-  baseURL: 'http://8.137.36.56:8000', // 实际后端服务器地址
+  baseURL: 'https://8.137.36.56:8000', // 实际后端服务器地址
   url: '/api',
 })

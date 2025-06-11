@@ -32,7 +32,6 @@ const store = useStore(
     vantVersion: ref('2.10.1'),
   },
 )
-
 const playgroundStore = usePlaygroundStore()
 
 onMounted(() => {
