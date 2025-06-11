@@ -29,6 +29,7 @@ export default antfu({
       $dialog: 'readonly',
       $notification: 'readonly',
       $modal: 'readonly',
+      NodeJS: 'readonly',
     },
   },
 })

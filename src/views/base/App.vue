@@ -1,19 +1,13 @@
 <template>
-  <component @generate="handleGenerate" :is="generated ? vantPlayground : guide" :code="code" />
+  <component :is="store.generated ? vantPlayground : guide" />
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { onMounted  } from 'vue'
+<script setup lang="ts">
+import { usePlaygroundStore } from '@/store'
 import guide from './guide.vue'
 import vantPlayground from './vant-playground.vue'
-let generated = ref(false)
-let code = ref("");
-function handleGenerate(val) {
-  code.value = val;
-  generated.value = true;
 
-}
+const store = usePlaygroundStore()
 </script>
 
   <style>

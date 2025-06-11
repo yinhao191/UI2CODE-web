@@ -1,5 +1,5 @@
-import { RealRequest, request } from '@/utils'
+import { RealRequest } from '@/utils'
 
 export default {
-  generateCode: data => RealRequest.post('/ai/generate-code', data)
+  generateCode: data => RealRequest.post('/ai/generate-code', data),
 }
