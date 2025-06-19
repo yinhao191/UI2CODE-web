@@ -54,16 +54,6 @@ export const basePermissions = [
         enable: true,
         show: true,
       },
-      {
-        code: 'MyBlog',
-        name: '博客-掘金',
-        type: 'MENU',
-        path: 'https://juejin.cn/user/1961184475483255/posts',
-        icon: 'i-simple-icons:juejin',
-        order: 4,
-        enable: true,
-        show: true,
-      },
     ],
   },
 ]
