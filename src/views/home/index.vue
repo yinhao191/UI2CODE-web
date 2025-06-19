@@ -1,5 +1,3 @@
-
-
 <template>
   <AppPage show-footer>
     <div class="flex">
@@ -21,41 +19,22 @@
           —— 查尔斯·史考伯
         </p>
       </n-card>
-      <n-card class="ml-12 w-70%" title="✨ 欢迎使用 Vue Naive Admin 2.0">
-        <template #header-extra>
-          <a
-            class="text-14 text-primary text-highlight hover:underline hover:opacity-80"
-            href="https://isme.top"
-            target="_blank"
-            @click.prevent="message?.info('官网正在火速开发中...')"
-          >
-            isme.top
-          </a>
-        </template>
-
+      <n-card class="ml-12 w-70%" title="✨ 欢迎使用 ui2code 1.0">
         <p class="opacity-60">
-          这是一款极简风格的后台管理模板，包含前后端解决方案，前端使用 Vite + Vue3 + Pinia +
-          Unocss，后端使用 Nestjs + TypeOrm +
-          MySql，简单易用，赏心悦目，历经十几次重构和细节打磨，诚意满满！！
+          ui2code 是面向 AI 时代的前端智能研发平台,
+          能够根据设计图直接生成前端源代码,
+          支持用户自定义组件的代码生成,
+          为前端研发带来高质、高效、高产的研发体验。
         </p>
         <footer class="mt-12 flex items-center justify-end">
           <n-button
             type="primary"
             ghost
             tag="a"
-            href="https://isme.top"
+            href="#"
             target="__blank"
           >
-            开发文档
-          </n-button>
-          <n-button
-            type="primary"
-            class="ml-12"
-            tag="a"
-            href="https://github.com/zclzone/vue-naive-admin/tree/2.x"
-            target="__blank"
-          >
-            代码仓库
+            使用文档
           </n-button>
         </footer>
       </n-card>
@@ -63,79 +42,38 @@
     <div class="mt-12 flex">
       <n-card class="w-50%" title="💯 特性" segmented>
         <template #header-extra>
-          <span class="opacity-90 text-highlight">👏 历经十几次重构和细节打磨</span>
+          <span class="opacity-90 text-highlight">👏 核心功能</span>
         </template>
 
         <ul class="opacity-90">
           <li class="py-4">
-            🆒 使用
-            <b>Vue3</b>
-            主流技术栈:
-            <span class="text-highlight">Vite + Vue3 + Pinia</span>
+            🆒
+            <b>图生代码：</b>
+            <span>基于设计图智能生成前端代码，满足多终端设备的响应式布局需求。</span>
           </li>
           <li class="py-4">
-            🍇 使用
-            <b>原子CSS</b>
-            框架:
-            <span class="text-highlight">Unocss</span>
-            ，优雅、轻量、易用
+            🍇
+            <b>语义化与可复用性：</b>
+            <span>智能识别并优化重复的 UI 元素，生成语义清晰、结构合理的高质量代码。</span>
           </li>
           <li class="py-4">
-            🤹 使用主流的
-            <span class="text-highlight">iconify + unocss</span>
-            图标方案，支持自定义图标，支持动态渲染
+            🤹 <b>导出与集成：</b>
+            <span>支持下载单个文件和导出整个工程，便于用户将代码资产高效集成至开发项目。</span>
           </li>
           <li class="py-4">
-            🎨 使用 Naive UI，
-            <span class="text-highlight">极致简洁的代码风格和清爽的页面设计</span>
-            ，审美在线，主题轻松定制
+            🎨 <b>自定义UI组件生成：</b>
+            <span>支持用户自定义UI组件的代码生成。</span>
           </li>
           <li class="py-4">
-            👏 先进且易于理解的文件结构设计，多个模块之间
-            <b>零耦合</b>
-            ，单个业务模块删除不影响其他模块
-          </li>
-          <li class="py-4">
-            🚀
-            <span class="text-highlight">扁平化路由</span>
-            设计，每一个组件都可以是一个页面，告别多级路由 KeepAlive 难实现问题
-          </li>
-
-          <li class="py-4">
-            🍒
-            <span class="text-highlight">基于权限动态生成路由</span>
-            ，无需额外定义路由，
-            <span class="text-highlight">403和404可区分</span>
-            ，而不是无权限也跳404
-          </li>
-          <li class="py-4">
-            🔐 基于Redis集成
-            <span class="text-highlight">无感刷新</span>
-            ，用户登录态可控，安全与体验缺一不可
-          </li>
-          <li class="py-4">
-            ✨ 基于 Naive UI 封装
-            <span class="text-highlight">message</span>
-            全局工具方法，支持批量提醒，支持跨页面共享实例
-          </li>
-          <li class="py-4">
-            ⚡️ 基于 Naive UI 封装常用的业务组件，包含
-            <span class="text-highlight">Page</span>
-            组件、
-            <span class="text-highlight">CRUD</span>
-            表格组件及
-            <span class="text-highlight">Modal</span>
-            组件，减少大量重复性工作
+            👏
+            <b>用户资产管理：</b>
+            统一存储和管理生成的代码资产，提供查看、编辑、导出等功能。
           </li>
         </ul>
 
         <n-divider class="mb-0! mt-12!">
           <p class="text-14 opacity-60">
-            👉点击
-            <b class="mx-2 transition hover:text-primary">
-              <a href="https://isme.top" target="_blank">更多</a>
-            </b>
-            查看更多实用功能，持续开发中...
+            更多实用功能，持续开发中...
           </p>
         </n-divider>
       </n-card>
@@ -144,12 +82,6 @@
         <VChart :option="skillOption" autoresize />
       </n-card>
     </div>
-
-    <n-card class="mt-12" title="⚡️ 趋势" segmented>
-      <div class="h-400">
-        <VChart :option="trendOption" autoresize />
-      </div>
-    </n-card>
   </AppPage>
 </template>
 
@@ -174,64 +106,6 @@ echarts.use([
   UniversalTransition,
   PieChart,
 ])
-
-const trendOption = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      crossStyle: {
-        color: '#999',
-      },
-    },
-  },
-  legend: {
-    top: '5%',
-    data: ['star', 'fork'],
-  },
-  xAxis: [
-    {
-      type: 'category',
-      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-      axisPointer: {
-        type: 'shadow',
-      },
-    },
-  ],
-  yAxis: [
-    {
-      type: 'value',
-      min: 0,
-      max: 3000,
-      interval: 500,
-      axisLabel: {
-        formatter: '{value}',
-      },
-    },
-    {
-      type: 'value',
-      min: 0,
-      max: 500,
-      interval: 100,
-      axisLabel: {
-        formatter: '{value}',
-      },
-    },
-  ],
-  series: [
-    {
-      name: 'star',
-      type: 'line',
-      data: [200, 320, 520, 550, 600, 805, 888, 950, 1300, 2503, 2702, 2712],
-    },
-    {
-      name: 'fork',
-      yAxisIndex: 1,
-      type: 'bar',
-      data: [40, 72, 110, 115, 121, 175, 180, 201, 260, 398, 423, 455],
-    },
-  ],
-}
 
 const skillOption = {
   tooltip: {
@@ -278,6 +152,4 @@ const skillOption = {
     },
   ],
 }
-
-const message = $message
 </script>

@@ -28,6 +28,7 @@ import {
   watchEffect,
   Fragment,
   createVNode,
+  getCurrentInstance,
   renderList,
   withKeys,
   vModelText,
@@ -64,7 +65,7 @@ export {
 } from "./chunks/package-C8L7gUof.js";
 import { d as debounce } from "./chunks/utils-BJf_b1Uq.js";
 
-const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   __name: "SplitPane",
   props: {
     layout: {},
@@ -214,11 +215,11 @@ const _export_sfc = (sfc, props) => {
   return target;
 };
 
-const SplitPane = /* @__PURE__ */ _export_sfc(_sfc_main$8, [
+const SplitPane = /* @__PURE__ */ _export_sfc(_sfc_main$9, [
   ["__scopeId", "data-v-a9fd0472"],
 ]);
 
-const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   __name: "Message",
   props: {
     err: { type: [String, Error, Boolean] },
@@ -291,7 +292,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   },
 });
 
-const Message = /* @__PURE__ */ _export_sfc(_sfc_main$7, [
+const Message = /* @__PURE__ */ _export_sfc(_sfc_main$8, [
   ["__scopeId", "data-v-024df844"],
 ]);
 
@@ -652,7 +653,7 @@ function processHtmlFile(store, src, filename, processed, seen) {
   processed.push(jsCode);
 }
 
-const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "Sandbox",
   props: {
     store: {},
@@ -926,11 +927,11 @@ Tip: edit the "Import Map" tab to specify import paths for dependencies.`;
   },
 });
 
-const Sandbox = /* @__PURE__ */ _export_sfc(_sfc_main$6, [
+const Sandbox = /* @__PURE__ */ _export_sfc(_sfc_main$7, [
   ["__scopeId", "data-v-eca3ad75"],
 ]);
 
-const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   __name: "Preview",
   props: {
     show: { type: Boolean },
@@ -972,9 +973,216 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   },
 });
 
+const isClient = typeof window !== "undefined";
+
+/**
+ * Call onUnmounted() if it's inside a component lifecycle, if not, do nothing
+ *
+ * @param fn
+ */
+function tryOnUnmounted(fn) {
+  if (getCurrentInstance()) onUnmounted(fn);
+}
+
+const defaultWindow = isClient ? window : undefined;
+
+/**
+ * Get the dom element of a ref of element or Vue component instance
+ *
+ * @param elRef
+ */
+function unrefElement(elRef) {
+  var _a, _b;
+  const plain = unref(elRef);
+  return (_b = (_a = plain) === null || _a === void 0 ? void 0 : _a.$el) !==
+    null && _b !== void 0
+    ? _b
+    : plain;
+}
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __rest(s, e) {
+  var t = {};
+  for (var p in s)
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+      t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function")
+    for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (
+        e.indexOf(p[i]) < 0 &&
+        Object.prototype.propertyIsEnumerable.call(s, p[i])
+      )
+        t[p[i]] = s[p[i]];
+    }
+  return t;
+}
+
+/**
+ * Reports changes to the dimensions of an Element's content or the border-box
+ *
+ * @see https://vueuse.org/useResizeObserver
+ * @param target
+ * @param callback
+ * @param options
+ */
+function useResizeObserver(target, callback, options = {}) {
+  const { window = defaultWindow } = options,
+    observerOptions = __rest(options, ["window"]);
+  let observer;
+  const isSupported = window && "ResizeObserver" in window;
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect();
+      observer = undefined;
+    }
+  };
+  const stopWatch = watch(
+    () => unrefElement(target),
+    (el) => {
+      cleanup();
+      if (isSupported && window && el) {
+        // @ts-expect-error missing type
+        observer = new window.ResizeObserver(callback);
+        observer.observe(el, observerOptions);
+      }
+    },
+    { immediate: true, flush: "post" },
+  );
+  const stop = () => {
+    cleanup();
+    stopWatch();
+  };
+  tryOnUnmounted(stop);
+  return {
+    isSupported,
+    stop,
+  };
+}
+
+/**
+ * Reactive size of an HTML element.
+ *
+ * @see https://vueuse.org/useElementSize
+ * @param target
+ * @param callback
+ * @param options
+ */
+function useElementSize(
+  target,
+  initialSize = { width: 0, height: 0 },
+  options = {},
+) {
+  const width = ref(initialSize.width);
+  const height = ref(initialSize.height);
+  useResizeObserver(
+    target,
+    ([entry]) => {
+      width.value = entry.contentRect.width;
+      height.value = entry.contentRect.height;
+    },
+    options,
+  );
+  return {
+    width,
+    height,
+  };
+}
+
+var SwipeDirection;
+(function (SwipeDirection) {
+  SwipeDirection["UP"] = "UP";
+  SwipeDirection["RIGHT"] = "RIGHT";
+  SwipeDirection["DOWN"] = "DOWN";
+  SwipeDirection["LEFT"] = "LEFT";
+  SwipeDirection["NONE"] = "NONE";
+})(SwipeDirection || (SwipeDirection = {}));
+
+const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+  __name: "OutputContainer",
+  props: {
+    width: {},
+    height: {},
+    disableScaling: { type: Boolean },
+  },
+  setup(__props) {
+    const target = ref();
+    const props = __props;
+    const size = useElementSize(target);
+    const scale = computed(() => {
+      if (props.disableScaling) return "scale(1)";
+      return `scale(${Math.min(size.width.value / props.width, size.height.value / props.height)})`;
+    });
+    return (_ctx, _cache) => {
+      return (
+        openBlock(),
+        createElementBlock(
+          "div",
+          {
+            ref_key: "target",
+            ref: target,
+            style: normalizeStyle({
+              display: "grid",
+              placeItems: !_ctx.disableScaling ? "center" : "unset",
+              placeContent: !_ctx.disableScaling ? "center" : "unset",
+            }),
+            class: "output-container",
+          },
+          [
+            createElementVNode(
+              "div",
+              {
+                style: normalizeStyle({
+                  width: _ctx.disableScaling ? "100%" : `${_ctx.width}px`,
+                  height: _ctx.disableScaling ? "100%" : `${_ctx.height}px`,
+                  transform: scale.value,
+                  transformOrigin: "center center",
+                }),
+              },
+              [
+                renderSlot(
+                  _ctx.$slots,
+                  "default",
+                  {
+                    width: _ctx.width,
+                    height: _ctx.height,
+                    scale: scale.value,
+                  },
+                  void 0,
+                  true,
+                ),
+              ],
+              4,
+            ),
+          ],
+          4,
+        )
+      );
+    };
+  },
+});
+
+const OutputContainer = /* @__PURE__ */ _export_sfc(_sfc_main$5, [
+  ["__scopeId", "data-v-fd09e1aa"],
+]);
+
 const _hoisted_1$3 = { class: "tab-buttons" };
 const _hoisted_2$2 = ["onClick"];
-const _hoisted_3$1 = { class: "output-container" };
+const _hoisted_3$1 = { style: { display: "flex", "align-items": "center" } };
+const _hoisted_4$1 = ["onClick"];
 const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "Output",
   props: {
@@ -983,6 +1191,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     ssr: { type: Boolean },
   },
   setup(__props, { expose: __expose }) {
+    const disableScaling = ref(false);
     const props = __props;
     const { store } = inject(injectKeyProps);
     const previewRef = useTemplateRef("preview");
@@ -1000,8 +1209,39 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
         }
       },
     });
+    const devices = computed(() => {
+      return [
+        { name: "default", width: 1080, height: 960 },
+        { name: "iPhone 12 Pro", width: 390, height: 844 },
+        { name: "iPhone SE", width: 375, height: 667 },
+        { name: "Pixel 5", width: 393, height: 851 },
+        { name: "Galaxy S20", width: 412, height: 915 },
+        { name: "iPad Pro", width: 1024, height: 1366 },
+        { name: "MacBook Pro", width: 1440, height: 900 },
+        { name: "desktop", width: 1920, height: 1080 },
+        { name: "tablet", width: 768, height: 1024 },
+      ];
+    });
+    const selectPaneShow = ref(false);
+    const selectedDevice = ref(devices.value[0]);
+    const hoverTimer = ref();
     function reload() {
       previewRef.value?.reload();
+    }
+    function showMenu() {
+      clearTimeout(hoverTimer.value);
+      selectPaneShow.value = true;
+    }
+    function hideMenu() {
+      hoverTimer.value = setTimeout(() => {
+        selectPaneShow.value = false;
+      }, 200);
+    }
+    function keepMenuOpen() {
+      clearTimeout(hoverTimer.value);
+    }
+    function changeViewport(device) {
+      selectedDevice.value = device;
     }
     __expose({ reload, previewRef });
     return (_ctx, _cache) => {
@@ -1034,36 +1274,135 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
                 }),
                 128,
               )),
-            ]),
-            createElementVNode("div", _hoisted_3$1, [
-              createVNode(
-                _sfc_main$5,
+              createElementVNode(
+                "div",
                 {
-                  ref: "preview",
-                  show: mode.value === "preview",
-                  ssr: _ctx.ssr,
+                  class: "device-block",
+                  onMouseenter: showMenu,
+                  onMouseleave: hideMenu,
                 },
-                null,
-                8,
-                ["show", "ssr"],
+                [
+                  createElementVNode("div", _hoisted_3$1, [
+                    _cache[1] ||
+                      (_cache[1] = createElementVNode(
+                        "svg",
+                        {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                          width: "1.2em",
+                          height: "1.2em",
+                          preserveAspectRatio: "xMidYMid meet",
+                          viewBox: "0 0 32 32",
+                        },
+                        [
+                          createElementVNode("path", {
+                            d: "M10 30H4a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2zM4 16v12h6V16z",
+                            fill: "currentColor",
+                          }),
+                          createElementVNode("path", {
+                            d: "M28 4H6a2 2 0 0 0-2 2v6h2V6h22v14H14v2h2v4h-2v2h9v-2h-5v-4h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z",
+                            fill: "currentColor",
+                          }),
+                        ],
+                        -1,
+                      )),
+                    createElementVNode(
+                      "button",
+                      {
+                        class: "device-button",
+                        onClick: _cache[0] || (_cache[0] = () => {}),
+                      },
+                      [
+                        createElementVNode(
+                          "span",
+                          null,
+                          toDisplayString(selectedDevice.value.name),
+                          1,
+                        ),
+                      ],
+                    ),
+                  ]),
+                ],
+                32,
               ),
-              mode.value !== "preview"
-                ? (openBlock(),
-                  createBlock(
-                    props.editorComponent,
+            ]),
+            withDirectives(
+              createElementVNode(
+                "div",
+                {
+                  class: "device-select",
+                  onMouseenter: keepMenuOpen,
+                  onMouseleave: hideMenu,
+                },
+                [
+                  (openBlock(true),
+                  createElementBlock(
+                    Fragment,
+                    null,
+                    renderList(devices.value, (d) => {
+                      return (
+                        openBlock(),
+                        createElementBlock(
+                          "div",
+                          {
+                            key: d.name,
+                            onClick: ($event) => changeViewport(d),
+                          },
+                          toDisplayString(d.name),
+                          9,
+                          _hoisted_4$1,
+                        )
+                      );
+                    }),
+                    128,
+                  )),
+                ],
+                544,
+              ),
+              [[vShow, selectPaneShow.value]],
+            ),
+            createVNode(
+              OutputContainer,
+              {
+                width: selectedDevice.value.width,
+                height: selectedDevice.value.height,
+                "disable-scaling": disableScaling.value,
+              },
+              {
+                default: withCtx(() => [
+                  createVNode(
+                    _sfc_main$6,
                     {
-                      key: 0,
-                      readonly: "",
-                      filename: unref(store).activeFile.filename,
-                      value: unref(store).activeFile.compiled[mode.value],
-                      mode: mode.value,
+                      ref: "preview",
+                      show: mode.value === "preview",
+                      ssr: _ctx.ssr,
                     },
                     null,
                     8,
-                    ["filename", "value", "mode"],
-                  ))
-                : createCommentVNode("", true),
-            ]),
+                    ["show", "ssr"],
+                  ),
+                  mode.value !== "preview"
+                    ? (openBlock(),
+                      createBlock(
+                        props.editorComponent,
+                        {
+                          key: 0,
+                          readonly: "",
+                          filename: unref(store).activeFile.filename,
+                          value: unref(store).activeFile.compiled[mode.value],
+                          mode: mode.value,
+                        },
+                        null,
+                        8,
+                        ["filename", "value", "mode"],
+                      ))
+                    : createCommentVNode("", true),
+                ]),
+                _: 1,
+              },
+              8,
+              ["width", "height", "disable-scaling"],
+            ),
           ],
           64,
         )
@@ -1073,7 +1412,7 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
 });
 
 const Output = /* @__PURE__ */ _export_sfc(_sfc_main$4, [
-  ["__scopeId", "data-v-5893ae30"],
+  ["__scopeId", "data-v-ac150da5"],
 ]);
 
 const _hoisted_1$2 = ["onClick", "onDblclick"];
@@ -1660,4 +1999,4 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   },
 });
 
-export { _sfc_main$5 as Preview, _sfc_main as Repl, Sandbox, useStore };
+export { _sfc_main$6 as Preview, _sfc_main as Repl, Sandbox, useStore };
