@@ -27,6 +27,7 @@
     "vant-repl": "file:package/vant-repl",
     "vue": "^3.5.13",
     "vue-echarts": "^7.0.3",
+    "vue-hako": "^0.0.2",
     "vue-router": "^4.5.0",
     "xlsx": "^0.18.5"
   },

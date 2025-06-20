@@ -194,23 +194,53 @@ pre[data-v-024df844] {
   background-color: #1e1e1e;
 }
 
-.output-container[data-v-5893ae30] {
-  height: calc(100% - var(--header-height));
+.output-container[data-v-fd09e1aa] {
+  height: calc(100% - var(--header-height) - 20px);
   overflow: hidden;
   position: relative;
+  margin: 20px 40px;
 }
-.tab-buttons[data-v-5893ae30] {
+
+.device-block[data-v-ac150da5] {
+  position: absolute;
+  right: 0;
+  display: inline-block;
+}
+svg[data-v-ac150da5] {
+  color: aliceblue;
+}
+.device-select[data-v-ac150da5] {
+  position: absolute;
+  right: 0;
+  top: calc(var(--header-height) + 1px);
+  background-color: var(--bg-soft);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  padding: 8px;
+  z-index: 1000;
+}
+.device-select div[data-v-ac150da5] {
+  padding: 4px 8px;
+  cursor: pointer;
+  font-family: var(--font-code);
+  color: var(--text-light);
+}
+.device-select div[data-v-ac150da5]:hover {
+  background-color: var(--bg);
+  color: var(--color-branding-dark);
+}
+.tab-buttons[data-v-ac150da5] {
   box-sizing: border-box;
   border-bottom: 1px solid var(--border);
   background-color: var(--bg);
   height: var(--header-height);
   overflow: hidden;
 }
-.tab-buttons button[data-v-5893ae30] {
+.tab-buttons button[data-v-ac150da5] {
   padding: 0;
   box-sizing: border-box;
 }
-.tab-buttons span[data-v-5893ae30] {
+.tab-buttons span[data-v-ac150da5] {
   font-size: 13px;
   font-family: var(--font-code);
   text-transform: uppercase;
@@ -219,7 +249,7 @@ pre[data-v-024df844] {
   padding: 8px 16px 6px;
   line-height: 20px;
 }
-button.active[data-v-5893ae30] {
+button.active[data-v-ac150da5] {
   color: var(--color-branding-dark);
   border-bottom: 3px solid var(--color-branding-dark);
 }
