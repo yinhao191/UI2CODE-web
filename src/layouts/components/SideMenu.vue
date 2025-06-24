@@ -1,7 +1,18 @@
 
 
 <template>
-  <n-menu
+  <n-layout has-sider>
+    <n-layout-sider
+      bordered
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="64"
+      :collapsed="collapsed"
+      show-trigger
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+    >
+    <n-menu
     ref="menu"
     class="side-menu"
     accordion
@@ -13,6 +24,8 @@
     :value="activeKey"
     @update:value="handleMenuSelect"
   />
+    </n-layout-sider>
+  </n-layout>
 </template>
 
 <script setup>

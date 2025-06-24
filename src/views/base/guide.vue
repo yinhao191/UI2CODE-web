@@ -3,7 +3,11 @@
     <template #description>
       代码生成中...
     </template>
-    <div class="min-h-screen bg-[rgb(34,38,37)] text-white">
+    <div class="scanBox" v-show="loading">
+      <div class="scan">
+      </div>
+    </div>
+    <div class="min-h-screen bg-[rgb(34,38,37)] text-white" v-show="!loading">
       <div class="mx-auto w-50% f-c-c flex-col px-4 py-16 container">
         <h1 class="mb-8 text-36px font-bold">
           What do you want to build?
@@ -32,8 +36,9 @@
           :data="{
             account_id: '000',
           }"
+          :custom-request="handleCustomRequest"
           @change="handleChange"
-          @finish="handleFinish"
+          @success="handleFinish"
           @before-upload="handleBeforeUpload"
         >
           <i class="i-fe:image self-start pt-30 text-20 hover:bg-trueGray" />
@@ -57,14 +62,16 @@ import api from '@/api'
 import { usePlaygroundStore } from '@/store'
 import { onMounted, reactive, ref } from 'vue'
 import recentImage from './components/recent-image.vue'
-
 const loading = ref(false) // 控制加载状态
 
-const uploadUrl = 'https://8.137.36.56:8000/ai/generate-code'
+const uploadUrl = 'https://47.108.176.177:8000/ai/generate-code'
 // const imageURL = 'https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561749199281-c29ddfaa62f34be9abd4d5cba3909262.png?x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-date=20250606T084121Z&x-oss-expires=604799&x-oss-credential=LTAI5tFmAbWeBLgwsGRa9S64%2F20250606%2Fcn-chengdu%2Foss%2Faliyun_v4_request&x-oss-signature=3f2f7ddcf7eb935537885820532a3d31b49a57b7432c675128c8b879504f6722 '
 const store = usePlaygroundStore()
 
 const recentData = reactive<BuildData[]>([])
+
+const src = ref("https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561750064644-1fb4e2e30bd343a791649448a4bc5133.png")
+
 
 onMounted(async () => {
   const userRecentData = await api.getRecentBuild(123456)
@@ -81,15 +88,46 @@ function goToPlayground(data: BuildData) {
 
 const fileListLengthRef = ref(0)
 const uploadRef = ref(null)
+const imageRef = ref("")
+async function handleCustomRequest (obj: any) {
+  try {
+    const formData = new FormData();
+    const dataUrl = await readFileAsDataURL(obj.file.file)
+    formData.append('file', obj.file.file)
+    formData.append('account_id', '123')
+    console.log(formData.get('file'))
+    imageRef.value = dataUrl + "";
+    document.documentElement.style.setProperty('--image-url', "url("+dataUrl+")")
 
+    await api.getImageCode(formData).then((res) => {
+      console.log(res);
+      handleFinish(res);
+    });
+
+  } catch (error) {
+    $message.error('系统繁忙，请稍后再试...')
+    loading.value = false
+  }
+}
+function readFileAsDataURL (file: UploadFileInfo) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
 function handleBeforeUpload() {
   $message.loading('图片上传中...')
 }
 function handleChange(options: any) {
   fileListLengthRef.value = options.fileList.length
 }
-function handleFinish(options: any) {
-  const response = JSON.parse(options.event?.target.response)
+function handleFinish(response: any) {
+  //console.log(options)
+ // const response = JSON.parse(res)
   loading.value = false
   const playgroundData: BuildData = {
     imagePath: response.data.createTime, // 待playground新增了图片对比功能后修改
@@ -105,6 +143,87 @@ function handleClick() {
 </script>
 
 <style scoped>
+.scanBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 100px 0;
+  background-color: black;
+}
+.scan{
+  width: 365px;
+  height: 660px;
+  background-image: var(--image-url);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.scan::after{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 365px;
+  height: 10px;
+  background-image: var(--image-url);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  filter: grayscale(50%) sepia(100%) hue-rotate(120deg);
+  opacity: 1;
+  animation: move 1.8s linear infinite;    
+}
+@keyframes move{
+            0%{
+                top: 0;
+                background-position: 6px 0px; 
+            }
+            10%{
+                top: 180px;
+                background-position: -6px -180px; 
+            }
+            20%{
+                top: 300px;
+                background-position: 6px -300px; 
+            }
+            30%{
+                top: 420px;
+                background-position: -6px -420px;
+            }
+            40%{
+                top: 540px;
+                background-position: 6px -540px;
+            }
+            50%{
+                top: 660x;
+                background-position: -6px -660px;
+            }
+            60%{
+                top: 540px;
+                background-position: 6px -540px;
+            }
+            70%{
+                top: 420px;
+                background-position: -6px -420px;
+            }
+            80%{
+                top: 300px;
+                background-position: 6px -300px; 
+            }
+            90%{
+                top: 180px;
+                background-position: -6px -180px; 
+            }
+            100%{
+                top: 0;
+                background-position: 6px 0px; 
+            }
+          
+}
+
 input::placeholder {
   position: relative;
   top: -40px;
