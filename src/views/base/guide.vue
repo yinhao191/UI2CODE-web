@@ -105,7 +105,8 @@ async function handleCustomRequest (obj: any) {
     });
 
   } catch (error) {
-    console.log('文件读取失败', error)
+    $message.error('系统繁忙，请稍后再试...')
+    loading.value = false
   }
 }
 function readFileAsDataURL (file: UploadFileInfo) {
