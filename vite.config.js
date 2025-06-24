@@ -78,7 +78,7 @@ export default defineConfig(({ mode }) => {
         },
         '/api': {
           // target: 'https://m1.apifoxmock.com/m1/6094781-5785319-default', // 后端服务部署后替换为服务器地址
-          target: 'http://8.137.36.56:8000', // 后端服务部署后替换为服务器地址
+          target: 'http://47.108.176.177:8000', // 后端服务部署后替换为服务器地址
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, ''),
           secure: false,

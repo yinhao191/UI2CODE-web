@@ -38,7 +38,7 @@
           }"
           :custom-request="handleCustomRequest"
           @change="handleChange"
-          @finish="handleFinish"
+          @success="handleFinish"
           @before-upload="handleBeforeUpload"
         >
           <i class="i-fe:image self-start pt-30 text-20 hover:bg-trueGray" />
@@ -64,7 +64,7 @@ import { onMounted, reactive, ref } from 'vue'
 import recentImage from './components/recent-image.vue'
 const loading = ref(false) // 控制加载状态
 
-const uploadUrl = 'https://8.137.36.56:8000/ai/generate-code'
+const uploadUrl = 'https://47.108.176.177:8000/ai/generate-code'
 // const imageURL = 'https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561749199281-c29ddfaa62f34be9abd4d5cba3909262.png?x-oss-signature-version=OSS4-HMAC-SHA256&x-oss-date=20250606T084121Z&x-oss-expires=604799&x-oss-credential=LTAI5tFmAbWeBLgwsGRa9S64%2F20250606%2Fcn-chengdu%2Foss%2Faliyun_v4_request&x-oss-signature=3f2f7ddcf7eb935537885820532a3d31b49a57b7432c675128c8b879504f6722 '
 const store = usePlaygroundStore()
 
@@ -91,9 +91,19 @@ const uploadRef = ref(null)
 const imageRef = ref("")
 async function handleCustomRequest (obj: any) {
   try {
+    const formData = new FormData();
     const dataUrl = await readFileAsDataURL(obj.file.file)
+    formData.append('file', obj.file.file)
+    formData.append('account_id', '123')
+    console.log(formData.get('file'))
     imageRef.value = dataUrl + "";
     document.documentElement.style.setProperty('--image-url', "url("+dataUrl+")")
+
+    await api.getImageCode(formData).then((res) => {
+      console.log(res);
+      handleFinish(res);
+    });
+
   } catch (error) {
     console.log('文件读取失败', error)
   }
@@ -114,8 +124,9 @@ function handleBeforeUpload() {
 function handleChange(options: any) {
   fileListLengthRef.value = options.fileList.length
 }
-function handleFinish(options: any) {
-  const response = JSON.parse(options.event?.target.response)
+function handleFinish(response: any) {
+  //console.log(options)
+ // const response = JSON.parse(res)
   loading.value = false
   const playgroundData: BuildData = {
     imagePath: response.data.createTime, // 待playground新增了图片对比功能后修改
