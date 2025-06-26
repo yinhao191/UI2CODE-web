@@ -1,18 +1,29 @@
-
-
 <template>
-  <n-menu
-    ref="menu"
-    class="side-menu"
-    accordion
-    :indent="18"
-    :collapsed-icon-size="22"
-    :collapsed-width="64"
-    :collapsed="appStore.collapsed"
-    :options="permissionStore.menus"
-    :value="activeKey"
-    @update:value="handleMenuSelect"
-  />
+  <n-layout has-sider>
+    <n-layout-sider
+      bordered
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="64"
+      :collapsed="collapsed"
+      show-trigger
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+    >
+      <n-menu
+        ref="menu"
+        class="side-menu"
+        accordion
+        :indent="18"
+        :collapsed-icon-size="22"
+        :collapsed-width="64"
+        :collapsed="appStore.collapsed"
+        :options="permissionStore.menus"
+        :value="activeKey"
+        @update:value="handleMenuSelect"
+      />
+    </n-layout-sider>
+  </n-layout>
 </template>
 
 <script setup>
