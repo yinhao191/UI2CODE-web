@@ -3,11 +3,10 @@
     <template #description>
       代码生成中...
     </template>
-    <div class="scanBox" v-show="loading">
-      <div class="scan">
-      </div>
+    <div v-show="loading" class="scanBox">
+      <div class="scan" />
     </div>
-    <div class="min-h-screen bg-[rgb(34,38,37)] text-white" v-show="!loading">
+    <div v-show="!loading" class="min-h-screen bg-[rgb(34,38,37)] text-white">
       <div class="mx-auto w-50% f-c-c flex-col px-4 py-16 container">
         <h1 class="mb-8 text-36px font-bold">
           What do you want to build?
@@ -62,6 +61,7 @@ import api from '@/api'
 import { usePlaygroundStore } from '@/store'
 import { onMounted, reactive, ref } from 'vue'
 import recentImage from './components/recent-image.vue'
+
 const loading = ref(false) // 控制加载状态
 
 const uploadUrl = 'https://47.108.176.177:8000/ai/generate-code'
@@ -70,11 +70,8 @@ const store = usePlaygroundStore()
 
 const recentData = reactive<BuildData[]>([])
 
-const src = ref("https://xjl-ui2code.oss-cn-chengdu.aliyuncs.com/1234561750064644-1fb4e2e30bd343a791649448a4bc5133.png")
-
-
 onMounted(async () => {
-  const userRecentData = await api.getRecentBuild(123456)
+  const userRecentData = await api.getRecentBuild(123)
   let data = userRecentData.data
   // 取前8个
   data = data.slice(0, 8)
@@ -88,28 +85,26 @@ function goToPlayground(data: BuildData) {
 
 const fileListLengthRef = ref(0)
 const uploadRef = ref(null)
-const imageRef = ref("")
-async function handleCustomRequest (obj: any) {
+const imageRef = ref('')
+async function handleCustomRequest(obj: any) {
   try {
-    const formData = new FormData();
+    const formData = new FormData()
     const dataUrl = await readFileAsDataURL(obj.file.file)
     formData.append('file', obj.file.file)
     formData.append('account_id', '123')
-    console.log(formData.get('file'))
-    imageRef.value = dataUrl + "";
-    document.documentElement.style.setProperty('--image-url', "url("+dataUrl+")")
+    imageRef.value = `${dataUrl}`
+    document.documentElement.style.setProperty('--image-url', `url(${dataUrl})`)
 
     await api.getImageCode(formData).then((res) => {
-      console.log(res);
-      handleFinish(res);
-    });
-
-  } catch (error) {
-    $message.error('系统繁忙，请稍后再试...')
+      handleFinish(res)
+    })
+  }
+  catch (error) {
+    $message.error(`系统繁忙，请稍后再试...${error}`)
     loading.value = false
   }
 }
-function readFileAsDataURL (file: UploadFileInfo) {
+function readFileAsDataURL(file: any) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -126,8 +121,8 @@ function handleChange(options: any) {
   fileListLengthRef.value = options.fileList.length
 }
 function handleFinish(response: any) {
-  //console.log(options)
- // const response = JSON.parse(res)
+  // console.log(options)
+  // const response = JSON.parse(res)
   loading.value = false
   const playgroundData: BuildData = {
     imagePath: response.data.createTime, // 待playground新增了图片对比功能后修改
@@ -152,7 +147,7 @@ function handleClick() {
   padding: 100px 0;
   background-color: black;
 }
-.scan{
+.scan {
   width: 365px;
   height: 660px;
   background-image: var(--image-url);
@@ -162,7 +157,7 @@ function handleClick() {
   overflow: hidden;
   cursor: pointer;
 }
-.scan::after{
+.scan::after {
   content: '';
   position: absolute;
   top: 0;
@@ -174,54 +169,53 @@ function handleClick() {
   background-repeat: no-repeat;
   filter: grayscale(50%) sepia(100%) hue-rotate(120deg);
   opacity: 1;
-  animation: move 1.8s linear infinite;    
+  animation: move 1.8s linear infinite;
 }
-@keyframes move{
-            0%{
-                top: 0;
-                background-position: 6px 0px; 
-            }
-            10%{
-                top: 180px;
-                background-position: -6px -180px; 
-            }
-            20%{
-                top: 300px;
-                background-position: 6px -300px; 
-            }
-            30%{
-                top: 420px;
-                background-position: -6px -420px;
-            }
-            40%{
-                top: 540px;
-                background-position: 6px -540px;
-            }
-            50%{
-                top: 660x;
-                background-position: -6px -660px;
-            }
-            60%{
-                top: 540px;
-                background-position: 6px -540px;
-            }
-            70%{
-                top: 420px;
-                background-position: -6px -420px;
-            }
-            80%{
-                top: 300px;
-                background-position: 6px -300px; 
-            }
-            90%{
-                top: 180px;
-                background-position: -6px -180px; 
-            }
-            100%{
-                top: 0;
-                background-position: 6px 0px; 
-            }
-          
+@keyframes move {
+  0% {
+    top: 0;
+    background-position: 6px 0px;
+  }
+  10% {
+    top: 180px;
+    background-position: -6px -180px;
+  }
+  20% {
+    top: 300px;
+    background-position: 6px -300px;
+  }
+  30% {
+    top: 420px;
+    background-position: -6px -420px;
+  }
+  40% {
+    top: 540px;
+    background-position: 6px -540px;
+  }
+  50% {
+    top: 660x;
+    background-position: -6px -660px;
+  }
+  60% {
+    top: 540px;
+    background-position: 6px -540px;
+  }
+  70% {
+    top: 420px;
+    background-position: -6px -420px;
+  }
+  80% {
+    top: 300px;
+    background-position: 6px -300px;
+  }
+  90% {
+    top: 180px;
+    background-position: -6px -180px;
+  }
+  100% {
+    top: 0;
+    background-position: 6px 0px;
+  }
 }
 
 input::placeholder {
