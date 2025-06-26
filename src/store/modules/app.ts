@@ -5,7 +5,7 @@ import { defineStore } from 'pinia'
 
 export const useAppStore = defineStore('app', {
   state: () => ({
-    collapsed: false,
+    collapsed: true,
     isDark: useDark(),
     layout: defaultLayout,
     primaryColor: defaultPrimaryColor,
@@ -13,7 +13,7 @@ export const useAppStore = defineStore('app', {
   }),
   actions: {
     switchCollapsed() {
-      this.collapsed = !this.collapsed
+      // this.collapsed = !this.collapsed
     },
     setCollapsed(b: any) {
       this.collapsed = b

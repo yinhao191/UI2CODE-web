@@ -16,4 +16,7 @@ const store = usePlaygroundStore()
   height: 600px;
   margin: 20px;
 }
+:root {
+  --image-url: url('');
+}
 </style>

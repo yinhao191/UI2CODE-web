@@ -15,4 +15,6 @@ export default {
   validateMenuPath: (path: string) => request.get(`/permission/menu/validate?path=${path}`),
   // 获取最近的项目
   getRecentBuild: (userId: string | number) => RealRequest.get(`/user/recentBuild/${userId}`),
+  // 图生代码
+  getImageCode: (formData: FormData) => RealRequest.post('ai/generate-code', formData),
 }
