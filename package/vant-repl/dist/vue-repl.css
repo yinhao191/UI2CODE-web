@@ -183,14 +183,14 @@ pre[data-v-024df844] {
   transform: translate(0, 10px);
 }
 
-.iframe-container[data-v-eca3ad75],
-.iframe-container[data-v-eca3ad75] iframe {
+.iframe-container[data-v-3ad86515],
+.iframe-container[data-v-3ad86515] iframe {
   width: 100%;
   height: 100%;
   border: none;
   background-color: #fff;
 }
-.iframe-container.dark[data-v-eca3ad75] iframe {
+.iframe-container.dark[data-v-3ad86515] iframe {
   background-color: #1e1e1e;
 }
 

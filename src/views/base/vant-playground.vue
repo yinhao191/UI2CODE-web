@@ -35,8 +35,8 @@ import { onMounted, ref } from 'vue'
 
 const store = useStore(
   {
-    vueVersion: ref('2.6.14'),
-    vantVersion: ref('2.10.1'),
+    vueVersion: ref('3.5.17'),
+    vantVersion: ref('4.9.20'),
   },
 )
 const playgroundStore = usePlaygroundStore()
