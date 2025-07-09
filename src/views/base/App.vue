@@ -12,10 +12,6 @@ const store = usePlaygroundStore()
 
   <style>
   /* 自定义编辑器样式 */
-.vue-repl {
-  height: 600px;
-  margin: 20px;
-}
 :root {
   --image-url: url('');
 }

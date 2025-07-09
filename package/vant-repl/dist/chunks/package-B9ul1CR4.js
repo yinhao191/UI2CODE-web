@@ -18444,7 +18444,6 @@ async function compileFile(store, { filename, code, compiled }) {
       false,
       isTS,
       isJSX,
-      hasScoped,
     );
     if (Array.isArray(clientTemplateResult)) {
       return clientTemplateResult;
@@ -18458,7 +18457,6 @@ async function compileFile(store, { filename, code, compiled }) {
       true,
       isTS,
       isJSX,
-      hasScoped,
     );
     if (typeof ssrTemplateResult === "string") {
       ssrCode += `;${ssrTemplateResult}`;
@@ -18470,6 +18468,12 @@ async function compileFile(store, { filename, code, compiled }) {
     const { transformJSX } = await import("./jsx-fa2IyTRD.js");
     clientCode &&= transformJSX(clientCode);
     ssrCode &&= transformJSX(ssrCode);
+  }
+  if (hasScoped) {
+    appendSharedCode(
+      `
+${COMP_IDENTIFIER}.__scopeId = ${JSON.stringify(`data-v-${id}`)}`,
+    );
   }
   const ceFilter = store.sfcOptions.script?.customElement || /\.ce\.vue$/;
   function isCustomElement(filters) {
@@ -18632,9 +18636,9 @@ async function doCompileTemplate(
   ssr,
   isTS,
   isJSX,
-  hasScoped,
 ) {
   const expressionPlugins = [];
+  const hasScoped = descriptor.styles.some((s) => s.scoped);
   if (isTS) {
     expressionPlugins.push("typescript");
   }
@@ -18702,10 +18706,11 @@ function useVueImportMap(defaults = {}) {
   const vantVersion = ref(defaults.vantVersion || null);
   const importMap = computed(() => {
     let vueURL;
+    let serverRenderer;
     let vantURL;
     if (vueVersion.value.split(".")[0] === "2") {
       vueURL = `https://cdn.jsdelivr.net/npm/vue@${vueVersion.value}/dist/vue.esm.browser.js`;
-      `https://cdn.jsdelivr.net/npm/vue-server-renderer@${vueVersion.value}/index.min.js`;
+      serverRenderer = `https://cdn.jsdelivr.net/npm/vue-server-renderer@${vueVersion.value}/index.min.js`;
       vantURL = `https://cdn.jsdelivr.net/npm/vant@${vantVersion.value}/+esm`;
     } else {
       vueURL =
@@ -18714,14 +18719,15 @@ function useVueImportMap(defaults = {}) {
             productionMode.value ? defaults.runtimeProd : defaults.runtimeDev,
           )) ||
         `https://cdn.jsdelivr.net/npm/@vue/runtime-dom@${vueVersion.value || version$1}/dist/runtime-dom.esm-browser${productionMode.value ? `.prod` : ``}.js`;
-      (!vueVersion.value && normalizeDefaults(defaults.serverRenderer)) ||
+      serverRenderer =
+        (!vueVersion.value && normalizeDefaults(defaults.serverRenderer)) ||
         `https://cdn.jsdelivr.net/npm/@vue/server-renderer@${vueVersion.value || version$1}/dist/server-renderer.esm-browser.js`;
       vantURL = `https://cdn.jsdelivr.net/npm/vant@${vantVersion.value}/+esm`;
     }
     return {
       imports: {
         vue: vueURL,
-        // 'vue/server-renderer': serverRenderer,
+        "vue/server-renderer": serverRenderer,
         vant: vantURL,
       },
     };
@@ -18746,11 +18752,17 @@ const welcomeSFCCode =
 const newSFCCode =
   "<script setup></script>\n\n<template>\n  <div>\n    <slot />\n  </div>\n</template>\n";
 
-const injectVantCode =
-  "import Vant from 'vant'\n\nimport Vue from 'vue'\n\nexport function injectVant() {\n    console.log(Vue)\n    Vue.use(Vant)\n    console.log(\"vant inject !!!!\")\n}\n\nexport function appendStyle() {\n  return new Promise((resolve, reject) => {\n    const link = document.createElement('link')\n    link.rel = 'stylesheet'\n    link.href = 'https://unpkg.com/vant@2.10.1/lib/index.css'\n    link.onload = resolve\n    link.onerror = reject\n    document.body.appendChild(link)\n  })\n}\n// eslint-disable-next-line antfu/no-top-level-await\nawait appendStyle()\n";
+const injectVantCode_v2 =
+  "import Vant from 'vant'\n\nimport Vue from 'vue'\n// eslint-disable-next-line antfu/no-top-level-await\nawait appendStyle()\n\nexport function injectVant() {\n    console.log(Vue)\n    Vue.use(Vant)\n    console.log(\"vant inject !!!!\")\n}\n\nexport function appendStyle() {\n  return new Promise((resolve, reject) => {\n    const link = document.createElement('link')\n    link.rel = 'stylesheet'\n    link.href = 'https://unpkg.com/vant@2.10.1/lib/index.css'\n    link.onload = resolve\n    link.onerror = reject\n    document.body.appendChild(link)\n  })\n}\n\n\n";
+
+const injectVantCode_v4 =
+  "import Vant from 'vant'\n\nexport async function injectVant(app) {\n  try {\n    await appendStyle()\n    app.use(Vant)\n    console.log(\"Vant injected successfully!\")\n  } catch (error) {\n    console.error(\"Failed to load Vant CSS:\", error)\n    throw error // 让调用者处理错误\n  }\n}\n\nexport function appendStyle() {\n  return new Promise((resolve, reject) => {\n    const link = document.createElement('link')\n    link.rel = 'stylesheet'\n    link.href = 'https://cdn.jsdelivr.net/npm/vant@4.9.20/lib/index.min.css'\n    link.onload = resolve\n    link.onerror = reject\n    document.head.appendChild(link) // 推荐添加到 head 而非 body\n  })\n}";
 
 const mainCode =
   "import Vue from 'vue'\nimport App from './App.vue'\nimport Vant from 'vant'\nimport {injectVant} from './vantInject.js'\ninjectVant()\n\nVue.config.productionTip = false\nVue.use(Vant)\n\nnew Vue({\n  render: h => h(App),\n}).$mount('#app')\n";
+
+const mainCode4 =
+  "import { createApp } from 'vue'\nimport App from './App.vue'\nimport { injectVant } from './vantInject.js'\n\nconst app = createApp(App)\n\n// 先注入 Vant，再挂载应用\ninjectVant(app).then(() => {\n  app.mount('#app')\n  console.log('App mounted after Vant injection')\n}).catch(error => {\n  console.error('Failed to inject Vant:', error)\n})\n\n\n";
 
 const importMapFile = "import-map.json";
 const tsconfigFile = "tsconfig.json";
@@ -19040,7 +19052,11 @@ function useStore(
     setActive(store.mainFile);
   };
   const setDefaultFile = () => {
-    setFile(files.value, mainFile.value, mainCode);
+    setFile(
+      files.value,
+      mainFile.value,
+      vueVersion.value?.split(".")[0] === "2" ? mainCode : mainCode4,
+    );
   };
   if (serializedState) {
     deserialize(serializedState, false);
@@ -19053,6 +19069,10 @@ function useStore(
   activeFilename ||= ref(mainFile.value);
   const activeFile = computed(() => files.value[activeFilename.value]);
   applyBuiltinImportMap();
+  const injectVantCode =
+    vueVersion.value?.split(".")[0] === "2"
+      ? injectVantCode_v2
+      : injectVantCode_v4;
   const injectFile = new File("src/vantInject.js", injectVantCode);
   addFile(injectFile);
   const appFile = new File(

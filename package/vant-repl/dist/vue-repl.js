@@ -55,14 +55,14 @@ import {
   t as tsconfigFile,
   s as stripSrcPrefix,
   u as useStore,
-} from "./chunks/package-C8L7gUof.js";
+} from "./chunks/package-B9ul1CR4.js";
 export {
   F as File,
   c as compileFile,
   v as languageToolsVersion,
   m as mergeImportMap,
   a as useVueImportMap,
-} from "./chunks/package-C8L7gUof.js";
+} from "./chunks/package-B9ul1CR4.js";
 import { d as debounce } from "./chunks/utils-BJf_b1Uq.js";
 
 const _sfc_main$9 = /* @__PURE__ */ defineComponent({
@@ -837,7 +837,16 @@ Tip: edit the "Import Map" tab to specify import paths for dependencies.`;
         console.info(
           `[@vue/repl] successfully compiled ${modules.length} module${modules.length > 1 ? `s` : ``}.`,
         );
-        const codeToEval = [
+        const codeToEval_v3 = [
+          `window.__modules__ = {};window.__css__ = [];if (window.__app__) window.__app__.unmount();` +
+            (isSSR
+              ? ``
+              : `document.body.innerHTML = '<div id="app"></div>' + \`${previewOptions.value?.bodyHTML || ""}\``),
+          ...modules,
+          `document.querySelectorAll('style[css]').forEach(el => el.remove())
+        document.head.insertAdjacentHTML('beforeend', window.__css__.map(s => \`<style css>\${s}</style>\`).join('\\n'))`,
+        ];
+        const codeToEval_v2 = [
           `window.__modules__ = {};window.__css__ = [];if (window.__app__) window.__app__.$destroy();` +
             (isSSR
               ? ``
@@ -846,24 +855,46 @@ Tip: edit the "Import Map" tab to specify import paths for dependencies.`;
           `document.querySelectorAll('style[css]').forEach(el => el.remove())
         document.head.insertAdjacentHTML('beforeend', window.__css__.map(s => \`<style css>\${s}</style>\`).join('\\n'))`,
         ];
+        const codeToEval = store.value.vueVersion?.startsWith("3.")
+          ? codeToEval_v3
+          : codeToEval_v2;
         if (mainFile.endsWith(".vue")) {
-          codeToEval.push(
-            `import Vue from "vue"
-        ${previewOptions.value?.customCode?.importCode || ""}
-        const _mount = () => {
-          const AppComponent = __modules__["${mainFile}"].default
-          AppComponent.name = 'Repl'
-          const app = window.__app__ = new Vue(AppComponent).$mount('#app')
+          if (store.value.vueVersion?.startsWith("2.")) {
+            codeToEval.push(
+              `import Vue from 'vue'
+          ${previewOptions.value?.customCode?.importCode || ""}
+          const _mount = () => {
+            const AppComponent = __modules__["${mainFile}"].default
+            AppComponent.name = 'Repl'
+            const app = window.__app__ = new Vue(AppComponent).$mount('#app')
           
-          Vue.config.errorHandler = e => console.error(e)
-          ${previewOptions.value?.customCode?.useCode || ""}
-        }
-        if (window.__ssr_promise__) {
-          window.__ssr_promise__.then(_mount)
-        } else {
-          _mount()
-        }`,
-          );
+            Vue.config.errorHandler = e => console.error(e)
+            ${previewOptions.value?.customCode?.useCode || ""}
+          }
+          _mount()`,
+            );
+          } else {
+            codeToEval.push(
+              `import { ${isSSR ? `createSSRApp` : `createApp`} as _createApp } from "vue"
+          ${previewOptions.value?.customCode?.importCode || ""}
+          const _mount = () => {
+            const AppComponent = __modules__["${mainFile}"].default
+            AppComponent.name = 'Repl'
+            const app = window.__app__ = _createApp(AppComponent)
+            if (!app.config.hasOwnProperty('unwrapInjectedRef')) {
+              app.config.unwrapInjectedRef = true
+            }
+            app.config.errorHandler = e => console.error(e)
+            ${previewOptions.value?.customCode?.useCode || ""}
+            app.mount('#app')
+          }
+          if (window.__ssr_promise__) {
+            window.__ssr_promise__.then(_mount)
+          } else {
+            _mount()
+          }`,
+            );
+          }
         }
         await proxy.eval(codeToEval);
       } catch (e) {
@@ -928,7 +959,7 @@ Tip: edit the "Import Map" tab to specify import paths for dependencies.`;
 });
 
 const Sandbox = /* @__PURE__ */ _export_sfc(_sfc_main$7, [
-  ["__scopeId", "data-v-eca3ad75"],
+  ["__scopeId", "data-v-3ad86515"],
 ]);
 
 const _sfc_main$6 = /* @__PURE__ */ defineComponent({

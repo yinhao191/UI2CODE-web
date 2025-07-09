@@ -10,12 +10,19 @@
         </n-breadcrumb-item>
       </n-breadcrumb>
     </template>
-    <Repl
-      :store="store"
-      :editor="Monaco"
-      theme="dark"
-      :show-compile-output="true"
-      @keydown.ctrl.s.prevent
+    <div>
+      <n-button @click="handlePreviewImage">
+        原图对比
+      </n-button>
+      <Repl :store="store" :editor="Monaco" theme="dark" :show-compile-output="true" @keydown.ctrl.s.prevent />
+    </div>
+    <!-- 隐藏的图片预览组件 -->
+    <n-image
+      v-show="false"
+      ref="imageRef"
+      :src="previewSrc"
+      :preview-src="previewSrc"
+      :show-toolbar="true"
     />
   </CommonPage>
 </template>
@@ -28,11 +35,14 @@ import { onMounted, ref } from 'vue'
 
 const store = useStore(
   {
-    vueVersion: ref('2.6.14'),
-    vantVersion: ref('2.10.1'),
+    vueVersion: ref('3.5.17'),
+    vantVersion: ref('4.9.20'),
   },
 )
 const playgroundStore = usePlaygroundStore()
+
+const previewSrc = playgroundStore.buildData?.imagePath
+const imageRef = ref(null)
 
 onMounted(() => {
   // 激活时加载数据
@@ -44,12 +54,17 @@ function gotoGuidePage() {
   // 跳转到指南页面
   playgroundStore.reset()
 }
+
+function handlePreviewImage() {
+  // 处理预览图片逻辑
+  imageRef.value?.previewInstRef?.setPreviewSrc(previewSrc)
+  imageRef.value?.previewInstRef?.toggleShow()
+}
 </script>
 
-  <style>
-  /* 自定义编辑器样式 */
+<style>
+/* 自定义编辑器样式 */
 .vue-repl {
   height: 600px;
-  margin: 20px;
 }
 </style>
